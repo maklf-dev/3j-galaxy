@@ -9,9 +9,9 @@ import {OrbitControls} from "three/addons/controls/OrbitControls.js";
 
 //personal Modules
 import "./style.css";
-import {celestials} from "./data/cosmicDistanceScaler.js";
+import {celestials} from "./data/cosmicScaler.js";
 
-console.log(celestials);
+console.log(celestials.mars.rotationSpeedRelative);
 //------------------------Importation-End
 
 //------------------------Assets
@@ -208,7 +208,34 @@ const $NeptuneOrb = new THREE.Mesh(neptuneOrbGeo, neptuneOrbMaterial);
 scene.add($Sun, $Mercury, $Venus, lifeGroup, $Mars, $Jupiter, $Saturn, $Uranus, $Neptune);
 //----add orbits
 scene.add($MercuryOrb, $VenusOrb, $EarthOrb, $MoonOrb, $MarsOrb, $JupiterOrb, $SaturnOrb, $UranusOrb, $NeptuneOrb);
+//----add rotation group
+const mercuryRotation = new THREE.Group();
+mercuryRotation.add($Mercury);
+const venusRotation = new THREE.Group();
+venusRotation.add($Venus);
+const lifeGroupRotation = new THREE.Group();
+lifeGroupRotation.add(lifeGroup);
+const marsRotation = new THREE.Group();
+marsRotation.add($Mars);
+const jupiterRotation = new THREE.Group();
+jupiterRotation.add($Jupiter);
+const saturnRotation = new THREE.Group();
+saturnRotation.add($Saturn);
+const uranusRotation = new THREE.Group();
+uranusRotation.add($Uranus);
+const neptuneRotation = new THREE.Group();
+neptuneRotation.add($Neptune);
 
+scene.add(
+    mercuryRotation,
+    venusRotation,
+    lifeGroupRotation,
+    marsRotation,
+    jupiterRotation,
+    saturnRotation,
+    uranusRotation,
+    neptuneRotation
+);
 //------------------------SceneObjects-End
 
 //------------------------PostProcessing
@@ -251,6 +278,15 @@ window.addEventListener("resize", () => {
 //------------------------AnimationLoop
 const renderloop = () => {
     const elapsedTime = clock.getElapsedTime();
+    mercuryRotation.rotation.z += celestials.mercury.orbitSpeedRelative / 100;
+    venusRotation.rotation.z -= celestials.venus.orbitSpeedRelative / 100;
+    lifeGroupRotation.rotation.z += celestials.earth.orbitSpeedRelative / 100;
+    marsRotation.rotation.z += celestials.mars.orbitSpeedRelative / 100;
+    jupiterRotation.rotation.z += celestials.jupiter.orbitSpeedRelative / 100;
+    saturnRotation.rotation.z += celestials.saturn.orbitSpeedRelative / 100;
+    uranusRotation.rotation.z -= celestials.uranus.orbitSpeedRelative / 100;
+    neptuneRotation.rotation.z += celestials.neptune.orbitSpeedRelative / 100;
+    console.log();
     controls.update();
     renderer.render(scene, camera);
     window.requestAnimationFrame(renderloop);
