@@ -11,7 +11,6 @@ import {OrbitControls} from "three/addons/controls/OrbitControls.js";
 import "./style.css";
 import {celestials} from "./data/cosmicScaler.js";
 
-console.log(celestials.mars.rotationSpeedRelative);
 //------------------------Importation-End
 
 //------------------------Assets
@@ -31,7 +30,7 @@ scene.rotation.z = 90;
 //------------------------Scene-End
 
 //------------------------Camera
-const camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 6000);
+const camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 60000);
 camera.position.set(-3.7, -204, 31);
 //------------------------Camera-End
 
@@ -83,7 +82,6 @@ const mercuryOrbGeo = new THREE.TorusGeometry(
 );
 const mercuryOrbMaterial = new THREE.MeshBasicMaterial({color: "#ffffff"});
 const $MercuryOrb = new THREE.Mesh(mercuryOrbGeo, mercuryOrbMaterial);
-
 //----venus
 const venusGeo = new THREE.SphereGeometry(celestials.venus.visualRadius, 64, 64);
 const venusMaterial = new THREE.MeshBasicMaterial({color: "#B57B35"});
@@ -118,15 +116,19 @@ const $EarthOrb = new THREE.Mesh(earthOrbGeo, earthOrbMaterial);
 const moonGeo = new THREE.SphereGeometry(celestials.moon.visualRadius, 64, 64);
 const moonMaterial = new THREE.MeshBasicMaterial({color: "#ffffff"});
 const $Moon = new THREE.Mesh(moonGeo, moonMaterial);
-$Moon.position.y = celestials.moon.distance;
 //------moonOrbit
 const moonOrbGeo = new THREE.TorusGeometry(celestials.moon.distance, celestials.moon.distance / 350, 30, 100);
 const moonOrbMaterial = new THREE.MeshBasicMaterial({color: "#ff0c0c"});
 const $MoonOrb = new THREE.Mesh(moonOrbGeo, moonOrbMaterial);
 
 const lifeGroup = new THREE.Group();
-lifeGroup.add($Earth, $Moon);
 lifeGroup.position.x = celestials.earth.visualDistance;
+lifeGroup.add($Earth);
+
+const moonRotation = new THREE.Group();
+$Moon.position.x = celestials.moon.visualDistance;
+moonRotation.add($Moon, $MoonOrb);
+lifeGroup.add(moonRotation);
 
 //----mars
 const marsGeo = new THREE.SphereGeometry(celestials.mars.visualRadius, 64, 64);
@@ -207,7 +209,7 @@ const $NeptuneOrb = new THREE.Mesh(neptuneOrbGeo, neptuneOrbMaterial);
 //---- add celestial
 scene.add($Sun, $Mercury, $Venus, lifeGroup, $Mars, $Jupiter, $Saturn, $Uranus, $Neptune);
 //----add orbits
-scene.add($MercuryOrb, $VenusOrb, $EarthOrb, $MoonOrb, $MarsOrb, $JupiterOrb, $SaturnOrb, $UranusOrb, $NeptuneOrb);
+scene.add($MercuryOrb, $VenusOrb, $EarthOrb, $MarsOrb, $JupiterOrb, $SaturnOrb, $UranusOrb, $NeptuneOrb);
 //----add rotation group
 const mercuryRotation = new THREE.Group();
 mercuryRotation.add($Mercury);
@@ -281,6 +283,7 @@ const renderloop = () => {
     mercuryRotation.rotation.z += celestials.mercury.orbitSpeedRelative / 100;
     venusRotation.rotation.z -= celestials.venus.orbitSpeedRelative / 100;
     lifeGroupRotation.rotation.z += celestials.earth.orbitSpeedRelative / 100;
+    moonRotation.rotation.z += celestials.moon.orbitSpeedRelative / 100;
     marsRotation.rotation.z += celestials.mars.orbitSpeedRelative / 100;
     jupiterRotation.rotation.z += celestials.jupiter.orbitSpeedRelative / 100;
     saturnRotation.rotation.z += celestials.saturn.orbitSpeedRelative / 100;

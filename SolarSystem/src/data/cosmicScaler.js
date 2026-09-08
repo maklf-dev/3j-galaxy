@@ -110,7 +110,7 @@ for (const [name, data] of Object.entries(celestialBodiesData)) {
 
 celestials.moon = {
     distance: celestialBodiesData.moon.distanceFromEarth / distanceScale,
-    visualDistance: celestialBodiesData.moon.distanceFromEarth / distanceScale / 30,
+    visualDistance: celestialBodiesData.moon.distanceFromEarth / distanceScale,
     radius: celestialBodiesData.moon.diameter / distanceScale / 2,
     visualRadius: (celestialBodiesData.moon.diameter / distanceScale / 2) * visualScale,
     orbitSpeedRelative: earthOrbitPeriod / celestialBodiesData.moon.orbitPeriod,
